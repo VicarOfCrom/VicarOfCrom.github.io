@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
 
-  <title>hugo test</title>
-  <link rel="canonical" href="https://vicarofcrom.github.io/post/hugo-test/">
+  <title>sensor fusion sasiadek</title>
+  <link rel="canonical" href="https://vicarofcrom.github.io/post/sensor-fusion-sasiadek/">
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,700" rel="stylesheet" type="text/css">
 
@@ -141,22 +141,91 @@
       <div class="container">
 
 <div class="blog">
-  <h1>hugo test</h1>
+  <h1>sensor fusion sasiadek</h1>
   <p>Wed, Sep 28, 2016</p>
   <p>
     
+      
+        <a href="https://vicarofcrom.github.iocategories/article-notes">Article Notes</a>
+      
+        <a href="https://vicarofcrom.github.iocategories/data-correlation-project">Data Correlation Project</a>
+      
+    
             
   </p>
-  <p>Test building hugo sites and deploying to github pages.  I&rsquo;ll have to learn markdown.</p>
+  
 
-<p>Praise Crom</p>
+<h1 id="sensor-fusion-by-j-z-sasiadek">SENSOR FUSION by J.Z. Sasiadek</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>The paper begins with a breakdown of various sensor fusion concepts in order to define where this work falls in the greater world of sensor fusion.  that breakdown is as follows.</p>
+
+<ul>
+<li>Sensor fusion
+
+<ul>
+<li>Probabilistic Methods
+
+<ul>
+<li>Bayesian Reasoning</li>
+<li>Evidence Theory</li>
+<li>Robust Statistics</li>
+<li>Recursive Operators</li>
+</ul></li>
+<li>Least Squares Techniques
+
+<ul>
+<li>Kalman Filtering</li>
+<li>Optimal Theory</li>
+<li>Regularization</li>
+<li>Uncertianty Ellipsoids</li>
+</ul></li>
+<li>Intelligent Fusion
+
+<ul>
+<li>Fuzzy Logic</li>
+<li>Neural Networks</li>
+<li>Genetic Algorithms
+<br /></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>This paper focus on fusing GPS (Global Positioning System) and INS (Inertial Navigation System) data to improve positional accuracy in robotics.  The fusion techniques used are a combination of Kalman Filtering and Fuzzy Logic.  This so called Fuzzy Logic Adaptive System showed more accurate results than an Extended Kalman Filter.  Divergence in Kalman filters occurs if the theoretical behavior and actual behavior don&rsquo;t agree.  It comes in two flavors: Apparent and True.  The fuzzy logic adaptive controller (FLAC) introduced in the paper aims to prevent divergence.  Membership functions for the fuzzy logic controller are defined</p>
+
+<h2 id="applicability">Applicability</h2>
+
+<p>The methods presented in this article were exciting to me at first glance.  But this type of sensor fusion is focused solely on integrating similar types of data.  In this case it&rsquo;s location data in the form of GPS and INS.  My project is more analogous to event correlation in that it will be about taking disparate data such as timestamps, location, temperature, etc and correlating them in such a way as to help an operator pick out relationships.  In the first iterations, I think it&rsquo;s safe to make the assumption that the data streams themselves have no significant error.  I think for the correlation effort it&rsquo;s best to make the simplifying assumption that data divergence is negligible.  Later build would use these methods to clean up the data points and make them more accurate before passing to my discretization and correlation engine.</p>
+
+<h2 id="further-research">Further Research</h2>
+
+<h3 id="fuzzy-logic">Fuzzy Logic</h3>
+
+<p>Sasiadek examples for integration of fuzzy logic correlate most with the discretization that will need to be done in order to pass data from the MORSE robotics simulation into the presentation algorithm.  I think this is going to be the best angle to take for future research into how to achieve the discretization I need.</p>
+
+<h3 id="kalman-filters">Kalman Filters</h3>
+
+<p>Many of these papers I&rsquo;ve been reading focus on extending the functionality of Kalman Filters.  I have a rough idea what they are and what they do, but I need to invest some time into fully grokking them so that when papers talk about modifications or whatever I know what&rsquo;s going on.  I can infer what error covariance means by context, but I should just learn it completely.  It may have uses in this or other projects.</p>
+
+<h3 id="event-correlation">Event Correlation</h3>
+
+<p>Because of the nature of this project, it may be beneficial to veer off and investigate event correlation algorithms in order to see of some of that technology can be leveraged.</p>
+
+<h3 id="adjustable-sample-rate">Adjustable Sample Rate</h3>
+
+<p>It may be necessary to incorporate an adjustaable sample rate into the discretization engine, or maybe later at the presentation level.  Need to research possible options and do risk/reward analysis</p>
+
+<h4 id="note-to-self">Note to self</h4>
+
+<p>Put variable tables in appendices in papers I write.  I&rsquo;m constantly flipping backwards looking for the first mention of a variable because I forgot what a subscript was for.</p>
 
 </div>
 
   <br/><br/>
   <div class="pagination">
-    <a class="prev" href="https://vicarofcrom.github.io/post/sensor-fusion-sasiadek/">sensor fusion sasiadek</a>
     <a></a>
+    <a class="next" href="https://vicarofcrom.github.io/post/hugo-test/">hugo test</a>
   </div>
 
       </div>
