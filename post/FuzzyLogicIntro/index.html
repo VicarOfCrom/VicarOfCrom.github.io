@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
 
-  <title>Posts</title>
-  <link rel="canonical" href="https://VicarOfCrom.github.io/post/">
+  <title>FuzzyLogicIntro</title>
+  <link rel="canonical" href="https://vicarofcrom.github.io/post/FuzzyLogicIntro/">
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,700" rel="stylesheet" type="text/css">
 
@@ -141,51 +141,53 @@
       <div class="container">
 
 <div class="blog">
-  <div class="blog__tabs">
+  <h1>FuzzyLogicIntro</h1>
+  <p>Thu, Oct 6, 2016</p>
+  <p>
     
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/FuzzyLogicIntro/">       
-  <h3 class="blog__title">FuzzyLogicIntro</h3>
-  <div class="blog__subtitle">Thu, Oct 6, 2016</div>
-  <div class="blog__subtitle">
-    
-    
-  </div>
-</a>
+            
+  </p>
+  
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/sensor-fusion-sasiadek/">       
-  <h3 class="blog__title">sensor fusion sasiadek</h3>
-  <div class="blog__subtitle">Wed, Sep 28, 2016</div>
-  <div class="blog__subtitle">
-    
-      
-        Article Notes
-      
-        Data Correlation Project
-      
-    
-    
-  </div>
-</a>
+<p>#Fuzzy Logic Intro</p>
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/hugo-test/">       
-  <h3 class="blog__title">hugo test</h3>
-  <div class="blog__subtitle">Wed, Sep 28, 2016</div>
-  <div class="blog__subtitle">
-    
-    
-  </div>
-</a>
+<h2 id="summary">Summary</h2>
 
-    
-  </div>
+<p>After a small amount of research into sensor fusion.  I decided that the best path to explore re sensor data discretization would be Fuzzy Logic.  From the reading, it seems like the perfect tool to take a stream of data such as temperature, and rewrite it from very numerical data (100.2 F) to a more subjective form (HOT!).  To this end, I decided to investigate fuzzy logic and its engineering applications in order to hopefully leverage it as a tool for data discretization for the sensor correlation project.  The best source on the topic as it relates to engineering appears to be Fuzzy Logic with Engineering Applications by Timothy J. Ross.  This article will be the first of several that will summarize sections of the book and note applications and further research areas for my sensor correlation project.</p>
+
+<h3 id="chapter-1">Chapter 1</h3>
+
+<p>Chapter 1 starts off with a great Aristotle quote that I&rsquo;m totally going to file away for future use if I ever write a CFS article.  Like any good introduction article, it defines the subject matter, which I&rsquo;ve already mentioned briefly above.  The important thing to remember is that fuzzy sets aren&rsquo;t precise, but have imprecise properties of membership.  We&rsquo;ll skip over the intro and try to get to the useful stuff.</p>
+
+<h3 id="chapter-2">Chapter 2</h3>
+
+<p>Universe of discourse: The universe of all available informaiton on a given problem.
+Chapter 2 starts with a brief overview of classical set theory&hellip; Union, Intersection, etc.  The operations and properties for classical sets are similiar to the ones that will be used for fuzzy sets.  Once values are lumped into fuzzy sets with membership functions then operations such as unions, intersections, and complements can be run on them.  There&rsquo;s also an extra set of functions that apply only to fuzzy sets.  t-norms, t-conorms, and others are mentioned, but I don&rsquo;t think I have the cognitive capactiy to handle them right now.  Especially since I&rsquo;m not sure how applicable they&rsquo;ll be to what I&rsquo;m doing yet.</p>
+
+<p>##Applicablity
+2 chapters in, I am very optimistic about the applicability of fuzzy sets to the dscretization problem I need to solve.  It&rsquo;s interesting how whenever I think I&rsquo;m doing something that hasn&rsquo;t been done before, a little research shows that not only has it&rsquo;s been done, but to a degree I couldn&rsquo;t even anticipate by a whole body of science.  Investing some time into learning these fuzzy sets should pay off not only for this project, but for others to come.</p>
+
+<h2 id="further-research">Further Research</h2>
+
+<h3 id="membership-functions">Membership functions</h3>
+
+<p>I feel comfortable with the definitions, but I could definitely use more practice with the applications.  I need to do some googling and find some examples of what membership functions actually look like, and what the result looks like when applied to a small data set.  Maybe I&rsquo;ll get there in the next few chapters also.</p>
+
+<h3 id="set-notation-equations-in-markdown">Set Notation, Equations in Markdown</h3>
+
+<p>Not directly applicable to the project, but in the near future I&rsquo;m going to need to keep notes on membership functions, sets, etc.  Since I use markdown/hugo to build this blog, I will need to find some guides for getting that stuff formatted.</p>
+
+<p>###Dialectica Set Notation
+The algorithm I&rsquo;m planning on using for preparing the categories for presentation is dialectica.  It also makes extensive use of set notation. If some of these unions wind up being calculated as part of the fuzzy set creation, then it might be beneficial to computational efficiency to pass them to dialectica somehow rather than calculate it twice.  It might be worth playing with once I start actually creating fuzzy sets from the data streams. On the other hand, it might be a big fat waste of time.</p>
+
 </div>
-<div class="pagination">
-  <a></a>
-  <span class="number">1 / 1</span>  
-  <a></a>
-</div>
+
+  <br/><br/>
+  <div class="pagination">
+    <a></a>
+    <a class="next" href="https://vicarofcrom.github.io/post/sensor-fusion-sasiadek/">sensor fusion sasiadek</a>
+  </div>
+
       </div>
     </section>
     <footer>
