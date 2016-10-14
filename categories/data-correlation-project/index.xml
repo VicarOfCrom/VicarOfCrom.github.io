@@ -7,8 +7,145 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2016 Copyright Text</copyright>
-    <lastBuildDate>Wed, 28 Sep 2016 12:40:46 -0700</lastBuildDate>
+    <lastBuildDate>Mon, 10 Oct 2016 12:45:12 -0700</lastBuildDate>
     <atom:link href="https://VicarOfCrom.github.io/categories/data-correlation-project/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>FuzzyLogic3</title>
+      <link>https://vicarofcrom.github.io/post/FuzzyLogic3/</link>
+      <pubDate>Mon, 10 Oct 2016 12:45:12 -0700</pubDate>
+      
+      <guid>https://vicarofcrom.github.io/post/FuzzyLogic3/</guid>
+      <description>
+
+&lt;h1 id=&#34;fuzzy-logic-with-engineering-applications-chapter-3&#34;&gt;Fuzzy Logic with Engineering Applications, Chapter 3&lt;/h1&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Relation
+
+&lt;ul&gt;
+&lt;li&gt;Classical (Crisp): Used as a baseline for understanding fuzzy relations.  Foregoing notes on these.&lt;/li&gt;
+&lt;li&gt;Fuzzy Relations: Similar to classical relations, but because mapping is done with a membership function relations can have &amp;ldquo;degrees&amp;rdquo; of strength rather than being just binary
+
+&lt;ul&gt;
+&lt;li&gt;Properties
+
+&lt;ul&gt;
+&lt;li&gt;Reflexivity&lt;/li&gt;
+&lt;li&gt;Symmetry&lt;/li&gt;
+&lt;li&gt;Transitivity&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Crisp Equivalence Relation&lt;/li&gt;
+&lt;li&gt;Crisp Tolerance Relation&lt;/li&gt;
+&lt;li&gt;Fuzzy Tolerance and Equivalence Relations&lt;/li&gt;
+&lt;li&gt;Value Assignments
+
+&lt;ul&gt;
+&lt;li&gt;Cartesian product&lt;/li&gt;
+&lt;li&gt;Closed-form expression&lt;/li&gt;
+&lt;li&gt;Lookup table&lt;/li&gt;
+&lt;li&gt;Linguistic rules of knowledge&lt;/li&gt;
+&lt;li&gt;Classification&lt;/li&gt;
+&lt;li&gt;Automated methods from input/output data&lt;/li&gt;
+&lt;li&gt;Similarity methods in data manipulation&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Cosine Amplitude&lt;/li&gt;
+&lt;li&gt;Max-Min Method&lt;/li&gt;
+&lt;li&gt;Other Similarity Methods: Even more methods exist&amp;hellip; The author cites himself in the same book as a source for those, but the first edition.  Not sure what&amp;rsquo;s going on there. Hopefully they show up in a later chapter.&lt;/li&gt;
+&lt;li&gt;Other forms of the composition Operation
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A couple of examples such as back EMF in a motor, which already have solutions (I think) that don&amp;rsquo;t require fuzzy logic.  I suppose it&amp;rsquo;s helpful to see how its used, but as I&amp;rsquo;m reading I keep thinking it&amp;rsquo;s extraneous effort, which kind of distracts me from the specifics.  I would like to find an example of a problem that can only be solved with fuzzy logic, or at least better/more efficiently.&lt;/p&gt;
+
+&lt;h2 id=&#34;applicability&#34;&gt;Applicability&lt;/h2&gt;
+
+&lt;p&gt;This together with chapter four seem to have pretty high applicability for approach I&amp;rsquo;m taking to the sensor correlation problem.  I&amp;rsquo;ve got a pretty good idea how to formulate the membership function for certain types of data.  What would be really cool would be to have an algorithm that would analyze a range of data and look for trends or groupings and used those to generate the fuzzy sets.  This would be useful for types of data where you don&amp;rsquo;t know exactly where the delineation is going to fall ahead of time.  This might be outside my capacity though.&lt;/p&gt;
+
+&lt;h2 id=&#34;further-research&#34;&gt;Further Research&lt;/h2&gt;
+
+&lt;p&gt;Everything on youtube is basically introductions to the concept, without many applications.  This book continues to be pretty much the best resource I think I&amp;rsquo;m going to find for a while as far as applied fuzzy logic.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>SensorCorrelationOverview</title>
+      <link>https://vicarofcrom.github.io/post/SensorCorrelationOverview/</link>
+      <pubDate>Fri, 07 Oct 2016 11:34:55 -0700</pubDate>
+      
+      <guid>https://vicarofcrom.github.io/post/SensorCorrelationOverview/</guid>
+      <description>
+
+&lt;h1 id=&#34;sensor-correlation-project&#34;&gt;Sensor Correlation Project&lt;/h1&gt;
+
+&lt;h2 id=&#34;the-problem&#34;&gt;The Problem&lt;/h2&gt;
+
+&lt;p&gt;Imagine you have a scientific robot of some sort.  It gets sent off into some environment like a volcano to take measurements.  The robot in question has multiple sensors, all of which log data multiple times a second and stream it back to your control system. All of these data streams have to be processed and shown to a human for interpretation.  Even with only a couple of sensors, it&amp;rsquo;s impossible for human eyes to make sense of all the data streaming in.  Important correlations and discoveries will be missed, while time is wasted just plotting the data to visualize what appears to be a bunch of noise.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-plan&#34;&gt;The Plan&lt;/h2&gt;
+
+&lt;p&gt;The ultimate goal is to correlate pertinent portions of these data streams, and then to display the results in a manner that&amp;rsquo;s more easily interpreted by a human user.  In order to do this, I will need a robot simulation environment to generate data streams.  I&amp;rsquo;ll then need to create an algorithm to take the continuous sensor data that is quantitative and discretize it into a more quantitative form that lends itself to being categorized.  Then each entry and its associated categories will have to be fed into another algorithm for sorting and display.  This blog will consist of notes on research efforts as I figure out the best way to approach each of these steps.  There may also be an occaisional how to thrown in if I feel like I have something to add to the existing documentation.  Since this is a working notebook thats constantly being updated for clarification, expect errors and inconsistencies, and informality.&lt;/p&gt;
+
+&lt;h2 id=&#34;morse&#34;&gt;MORSE&lt;/h2&gt;
+
+&lt;p&gt;For the robot simulation engine I will most likely go with MORSE.  The price is right and it looks like it does everything I need.  I particularly need to look into the semantic camera.  If I want to pass object identifications to the discretization engine, the semantic camera should allow that, without having to construct an object identification algorithm.  This is perfect for me, since its not what I&amp;rsquo;m trying to do, and I&amp;rsquo;m sure others have already done it better than I ever could.&lt;/p&gt;
+
+&lt;h2 id=&#34;discretization&#34;&gt;Discretization&lt;/h2&gt;
+
+&lt;p&gt;This is the area I expect to expend the majority of my effort.  I need to come up with a generic algorithm for discretizing and categorizing sensor data.  I&amp;rsquo;m sure others have done similar work, so research will be required.  I&amp;rsquo;m coming up with a list of articles related to the discipline of sensor fusion, and I&amp;rsquo;ll be going through them and using this blog to gather thoughts on how well they apply to this project.&lt;/p&gt;
+
+&lt;h2 id=&#34;dialectica&#34;&gt;Dialectica&lt;/h2&gt;
+
+&lt;p&gt;For the presentation algorithm, I will use the dialectical architecture as presented by Dr. Rico Picone and Bryan Powel in their paper &amp;ldquo;A New Information Architecture: a Synthesis of Structure, Flow, and Dialectic&amp;rdquo;.  I think that the synthesis of Hierarchical and organic architecture proposed in this paper will be perfect for presenting the information to human eyes in order to facilitate pattern recognition.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>FuzzyLogicIntro</title>
+      <link>https://vicarofcrom.github.io/post/FuzzyLogicIntro/</link>
+      <pubDate>Thu, 06 Oct 2016 19:15:10 -0700</pubDate>
+      
+      <guid>https://vicarofcrom.github.io/post/FuzzyLogicIntro/</guid>
+      <description>
+
+&lt;h1 id=&#34;fuzzy-logic-intro&#34;&gt;Fuzzy Logic Intro&lt;/h1&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;After a small amount of research into sensor fusion.  I decided that the best path to explore re sensor data discretization would be Fuzzy Logic.  From the reading, it seems like the perfect tool to take a stream of data such as temperature, and rewrite it from very numerical data (100.2 F) to a more subjective form (HOT!).  To this end, I decided to investigate fuzzy logic and its engineering applications in order to hopefully leverage it as a tool for data discretization for the sensor correlation project.  The best source on the topic as it relates to engineering appears to be Fuzzy Logic with Engineering Applications by Timothy J. Ross.  This article will be the first of several that will summarize sections of the book and note applications and further research areas for my sensor correlation project.&lt;/p&gt;
+
+&lt;h3 id=&#34;chapter-1&#34;&gt;Chapter 1&lt;/h3&gt;
+
+&lt;p&gt;Chapter 1 starts off with a great Aristotle quote that I&amp;rsquo;m totally going to file away for future use if I ever write a CFS article.  Like any good introduction article, it defines the subject matter, which I&amp;rsquo;ve already mentioned briefly above.  The important thing to remember is that fuzzy sets aren&amp;rsquo;t precise, but have imprecise properties of membership.  We&amp;rsquo;ll skip over the intro and try to get to the useful stuff.&lt;/p&gt;
+
+&lt;h3 id=&#34;chapter-2&#34;&gt;Chapter 2&lt;/h3&gt;
+
+&lt;p&gt;Universe of discourse: The universe of all available informaiton on a given problem.
+Chapter 2 starts with a brief overview of classical set theory&amp;hellip; Union, Intersection, etc.  The operations and properties for classical sets are similiar to the ones that will be used for fuzzy sets.  Once values are lumped into fuzzy sets with membership functions then operations such as unions, intersections, and complements can be run on them.  There&amp;rsquo;s also an extra set of functions that apply only to fuzzy sets.  t-norms, t-conorms, and others are mentioned, but I don&amp;rsquo;t think I have the cognitive capactiy to handle them right now.  Especially since I&amp;rsquo;m not sure how applicable they&amp;rsquo;ll be to what I&amp;rsquo;m doing yet.&lt;/p&gt;
+
+&lt;h2 id=&#34;applicablity&#34;&gt;Applicablity&lt;/h2&gt;
+
+&lt;p&gt;2 chapters in, I am very optimistic about the applicability of fuzzy sets to the dscretization problem I need to solve.  It&amp;rsquo;s interesting how whenever I think I&amp;rsquo;m doing something that hasn&amp;rsquo;t been done before, a little research shows that not only has it&amp;rsquo;s been done, but to a degree I couldn&amp;rsquo;t even anticipate by a whole body of science.  Investing some time into learning these fuzzy sets should pay off not only for this project, but for others to come.&lt;/p&gt;
+
+&lt;h2 id=&#34;further-research&#34;&gt;Further Research&lt;/h2&gt;
+
+&lt;h3 id=&#34;membership-functions&#34;&gt;Membership functions&lt;/h3&gt;
+
+&lt;p&gt;I feel comfortable with the definitions, but I could definitely use more practice with the applications.  I need to do some googling and find some examples of what membership functions actually look like, and what the result looks like when applied to a small data set.  Maybe I&amp;rsquo;ll get there in the next few chapters also.&lt;/p&gt;
+
+&lt;h3 id=&#34;set-notation-equations-in-markdown&#34;&gt;Set Notation, Equations in Markdown&lt;/h3&gt;
+
+&lt;p&gt;Not directly applicable to the project, but in the near future I&amp;rsquo;m going to need to keep notes on membership functions, sets, etc.  Since I use markdown/hugo to build this blog, I will need to find some guides for getting that stuff formatted.&lt;/p&gt;
+
+&lt;h3 id=&#34;dialectica-set-notation&#34;&gt;Dialectica Set Notation&lt;/h3&gt;
+
+&lt;p&gt;The algorithm I&amp;rsquo;m planning on using for preparing the categories for presentation is dialectica.  It also makes extensive use of set notation. If some of these unions wind up being calculated as part of the fuzzy set creation, then it might be beneficial to computational efficiency to pass them to dialectica somehow rather than calculate it twice.  It might be worth playing with once I start actually creating fuzzy sets from the data streams. On the other hand, it might be a big fat waste of time.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>sensor fusion sasiadek</title>

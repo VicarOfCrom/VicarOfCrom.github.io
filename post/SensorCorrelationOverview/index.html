@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title> SensorCorrelationOverview &middot; VicarOfCrom&#39;s Blog </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="generator" content="Hugo 0.16" />
+
+
+<link rel="stylesheet" href="https://VicarOfCrom.github.io/css/vec.css">
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://VicarOfCrom.github.io/apple-touch-icon-144-precomposed.png">
+<link rel="shortcut icon" href="https://VicarOfCrom.github.io/favicon.ico">
+
+
+<link href="" rel="alternate" type="application/rss+xml" title="VicarOfCrom&#39;s Blog" />
+
+</head>
+
+<body>
+  <header>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://vicarofcrom.github.io">/home/vicarofcrom&#39;s blog</a>
+      </li>
+      
+  
+      <li class="pull-right"><a href=""><i class="fa fa-rss"></i></a></li>
+    </ul>
+  </nav>
+</header>
+  <div class="content">
+    
+    
+    <section class="post">
+      <h1 class="post-title"><a href="https://vicarofcrom.github.io/post/SensorCorrelationOverview/">SensorCorrelationOverview</a></h1>
+      <span class="post-date">Oct 7, 2016 </span>
+      <div class="post-content">
+        
+
+<h1 id="sensor-correlation-project">Sensor Correlation Project</h1>
+
+<h2 id="the-problem">The Problem</h2>
+
+<p>Imagine you have a scientific robot of some sort.  It gets sent off into some environment like a volcano to take measurements.  The robot in question has multiple sensors, all of which log data multiple times a second and stream it back to your control system. All of these data streams have to be processed and shown to a human for interpretation.  Even with only a couple of sensors, it&rsquo;s impossible for human eyes to make sense of all the data streaming in.  Important correlations and discoveries will be missed, while time is wasted just plotting the data to visualize what appears to be a bunch of noise.</p>
+
+<h2 id="the-plan">The Plan</h2>
+
+<p>The ultimate goal is to correlate pertinent portions of these data streams, and then to display the results in a manner that&rsquo;s more easily interpreted by a human user.  In order to do this, I will need a robot simulation environment to generate data streams.  I&rsquo;ll then need to create an algorithm to take the continuous sensor data that is quantitative and discretize it into a more quantitative form that lends itself to being categorized.  Then each entry and its associated categories will have to be fed into another algorithm for sorting and display.  This blog will consist of notes on research efforts as I figure out the best way to approach each of these steps.  There may also be an occaisional how to thrown in if I feel like I have something to add to the existing documentation.  Since this is a working notebook thats constantly being updated for clarification, expect errors and inconsistencies, and informality.</p>
+
+<h2 id="morse">MORSE</h2>
+
+<p>For the robot simulation engine I will most likely go with MORSE.  The price is right and it looks like it does everything I need.  I particularly need to look into the semantic camera.  If I want to pass object identifications to the discretization engine, the semantic camera should allow that, without having to construct an object identification algorithm.  This is perfect for me, since its not what I&rsquo;m trying to do, and I&rsquo;m sure others have already done it better than I ever could.</p>
+
+<h2 id="discretization">Discretization</h2>
+
+<p>This is the area I expect to expend the majority of my effort.  I need to come up with a generic algorithm for discretizing and categorizing sensor data.  I&rsquo;m sure others have done similar work, so research will be required.  I&rsquo;m coming up with a list of articles related to the discipline of sensor fusion, and I&rsquo;ll be going through them and using this blog to gather thoughts on how well they apply to this project.</p>
+
+<h2 id="dialectica">Dialectica</h2>
+
+<p>For the presentation algorithm, I will use the dialectical architecture as presented by Dr. Rico Picone and Bryan Powel in their paper &ldquo;A New Information Architecture: a Synthesis of Structure, Flow, and Dialectic&rdquo;.  I think that the synthesis of Hierarchical and organic architecture proposed in this paper will be perfect for presenting the information to human eyes in order to facilitate pattern recognition.</p>
+
+      </div>
+    </section>
+    
+    <section class="pagination clearfix">
+      
+      <a class="btn previous " href="https://vicarofcrom.github.io/post/FuzzyLogicIntro/"> FuzzyLogicIntro </a> 
+       
+      
+      <a class="btn next " href="https://vicarofcrom.github.io/post/FuzzyLogic3/"> FuzzyLogic3 </a> 
+      
+    </section>
+    
+    
+  </div>
+  
+  <footer>
+  <div class="footer-info">
+    <p>
+      <a href="mailto:?subject="><i class="fa fa-envelope-o"></i>  </a>
+      {
+        <a href="https://gohugo.io/" title="Hugo :: A fast and modern static website engine">Hugo 0.16</a>,
+        <a href="https://github.com/IvanChou/yii.im" title="vec">Vec</a> 
+      }
+      {<a href="http://creativecommons.org/licenses/by-nc-nd/3.0/" title="CC BY-NC-ND 3.0">CC BY-NC-ND 3.0</a>}
+    </p>
+  </div>
+</footer>
+  
+  <script src="https://VicarOfCrom.github.io/js/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+  
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'Your Tracking Id', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+</body>
+
+</html>
