@@ -2,13 +2,12 @@
 <!DOCTYPE html>
 <html ⚡>
 <head>
-	<meta name="generator" content="Hugo 0.16" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
 
-  <title>VicarOfCrom&#39;s Blog</title>
-  <link rel="canonical" href="https://VicarOfCrom.github.io/">
+  <title>JunosPolicyChecker</title>
+  <link rel="canonical" href="https://vicarofcrom.github.io/post/JunosPolicyChecker/">
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,700" rel="stylesheet" type="text/css">
 
@@ -142,117 +141,166 @@
       <div class="container">
 
 <div class="blog">
-  <div class="blog__tabs">
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/JunosPolicyChecker/">       
-  <h3 class="blog__title">JunosPolicyChecker</h3>
-  <div class="blog__subtitle">Thu, Oct 20, 2016</div>
-  <div class="blog__subtitle">
+  <h1>JunosPolicyChecker</h1>
+  <p>Thu, Oct 20, 2016</p>
+  <p>
     
       
-        Network Engineering Stuff
+        <a href="https://vicarofcrom.github.iocategories/network-engineering-stuff">Network Engineering Stuff</a>
       
     
     
       
-        #Juniper, python
+        <a href="https://vicarofcrom.github.iotags/juniper-python">#Juniper, python</a>
       
-    
-  </div>
-</a>
+            
+  </p>
+  
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/FuzzyLogic4/">       
-  <h3 class="blog__title">FuzzyLogic4</h3>
-  <div class="blog__subtitle">Thu, Oct 20, 2016</div>
-  <div class="blog__subtitle">
-    
-      
-        Data Correlation Project
-      
-    
-    
-  </div>
-</a>
+<h1 id="juniper-firewall-policy-checker">Juniper Firewall Policy Checker</h1>
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/FuzzyLogic3/">       
-  <h3 class="blog__title">FuzzyLogic3</h3>
-  <div class="blog__subtitle">Mon, Oct 10, 2016</div>
-  <div class="blog__subtitle">
-    
-      
-        Data Correlation Project
-      
-    
-    
-  </div>
-</a>
+<h2 id="summary">Summary</h2>
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/SensorCorrelationOverview/">       
-  <h3 class="blog__title">SensorCorrelationOverview</h3>
-  <div class="blog__subtitle">Fri, Oct 7, 2016</div>
-  <div class="blog__subtitle">
-    
-      
-        Data Correlation Project
-      
-    
-    
-  </div>
-</a>
+<p>Here&rsquo;s a little script I wrote using pythonEZ.  Give it tcp session details and it connects to the firewall and checks what rules are there for that session.  It authenticates with a username that has rights to only the queries it needs.  I wrapped it up in a web.py page and threw it up on an IIS server.  That way I can use windows domain security on the front end easily.  I&rsquo;ll throw the code up here for now, and I&rsquo;ll try and write up details for how I did everything else if I can remember.</p>
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/FuzzyLogicIntro/">       
-  <h3 class="blog__title">FuzzyLogicIntro</h3>
-  <div class="blog__subtitle">Thu, Oct 6, 2016</div>
-  <div class="blog__subtitle">
-    
-      
-        Article Notes
-      
-        Data Correlation Project
-      
-    
-    
-  </div>
-</a>
+<h2 id="the-code">The code</h2>
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/sensor-fusion-sasiadek/">       
-  <h3 class="blog__title">sensor fusion sasiadek</h3>
-  <div class="blog__subtitle">Wed, Sep 28, 2016</div>
-  <div class="blog__subtitle">
-    
-      
-        Article Notes
-      
-        Data Correlation Project
-      
-    
-    
-  </div>
-</a>
+<h3 id="policy-checker-py">policy_checker.py</h3>
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/hugo-test/">       
-  <h3 class="blog__title">hugo test</h3>
-  <div class="blog__subtitle">Wed, Sep 28, 2016</div>
-  <div class="blog__subtitle">
-    
-    
-  </div>
-</a>
+<p>`# -<em>- coding: utf-8 -</em>-
+&ldquo;&rdquo;&rdquo;
+Created on Mon Feb 22 15:58:01 2016</p>
 
-    
-  </div>
+<p>@author: VicarOfCrom
+&ldquo;&rdquo;&rdquo;</p>
+
+<h1 id="import-stuff">import stuff</h1>
+
+<p>#import sys
+#from pprint import pprint as pp
+from jnpr.junos import Device
+#from getpass import getpass
+from jnpr.junos.op.routes import RouteTable
+from myTables.op.zone import ZoneIntTable
+from myTables.op.policy import policyTable</p>
+
+<h1 id="change-username-after-testing-is-completed">change username after testing is completed</h1>
+
+<p>device=&ldquo;192.168.176.1&rdquo;
+user=&ldquo;lentzj&rdquo;
+#print &ldquo;\n Please provide password for user &lsquo;&rdquo; + user + &ldquo;&lsquo;on device &lsquo;&rdquo; + device +&ldquo;&rsquo;.&rdquo;
+#passwd = getpass()
+passwd =&ldquo;S3pulTur@&rdquo;
+srcIP = &ldquo;192.168.152.34&rdquo;
+dstIP = &ldquo;192.168.152.2&rdquo;
+proto = &ldquo;tcp&rdquo;
+dstPort = &ldquo;1433&rdquo;</p>
+
+<p>dev = Device(device,user=user,password=passwd)
+try:
+    dev.open(normalize=True)
+    print &ldquo;connected to &rdquo; + device + &ldquo; as dev&rdquo;
+except:
+    print &ldquo;connection failed.&rdquo;
+    print&rdquo;\n** Type exit() to quit **&rdquo;</p>
+
+<p>srcRoute = RouteTable(dev).get(srcIP, best=True)
+dstRoute = RouteTable(dev).get(dstIP, best=True)
+srcInt=srcRoute[0].via
+dstInt=dstRoute[0].via
+#pp(srcInt)
+#pp(dstInt)</p>
+
+<p>zones = ZoneIntTable(dev).get()
+for zone in zones.items():
+    for interfaces in zone[1]:
+        if interfaces[1] != None:
+            if srcInt in interfaces[1]:
+                srcZone = zone[0]
+            if dstInt in interfaces[1]:
+                dstZone = zone[0]
+#print srcZone
+#print dstZone</p>
+
+<p>policy = policyTable(dev).get(from_zone=srcZone, to_zone=dstZone, source_ip=srcIP, destination_ip=dstIP, source_port=&lsquo;1&rsquo;, destination_port=dstPort, protocol=proto )
+#pp(policy.items())</p>
+
+<p>print(&lsquo;session is &rsquo; + policy[0].action + &lsquo;ed&rsquo;)</p>
+
+<p>print(&lsquo;POLICY DETAILS:&lsquo;)
+print&rsquo;Source Zone: &lsquo;, srcZone,&rsquo;   Destination Zone: &lsquo;, dstZone
+print&rsquo;Source: &lsquo;, policy[0].src.items()
+print&rsquo;Destination: &lsquo;, policy[0].dst.items()
+print&rsquo;Application: &lsquo;, policy[0].app
+print&rsquo;Action:&lsquo;, policy[0].action</p>
+
+<p>dev.close()`</p>
+
+<h3 id="app-py">app.py</h3>
+
+<p>`import web
+from jnpr.junos import Device
+from jnpr.junos.op.routes import RouteTable
+from myTables.op.policy import policyTable
+from myTables.op.intZone import IntZoneTable</p>
+
+<p>urls = (
+    &lsquo;/app.py.*&lsquo;, &lsquo;Index&rsquo;,
+    &lsquo;/policy_checker&rsquo;, &lsquo;Index&rsquo;
+)</p>
+
+<p>app = web.application(urls, globals())</p>
+
+<p>render = web.template.render(&lsquo;templates/&rsquo;, base=&ldquo;layout&rdquo;)</p>
+
+<p>class Index(object):
+    def GET(self):
+        return render.policy_checker()</p>
+
+<pre><code>def POST(self):
+    form = web.input(srcIP=&quot;SourceIP&quot;, dstIP=&quot;DestinationIP&quot;, proto=&quot;Protocol&quot;, dstPort=&quot;DstPort&quot;)
+    device=&quot;192.168.176.1&quot;
+    user=&quot;tesco.vee&quot;
+    passwd =&quot;Q-&amp;0MU+aDh,IXhZG$rG&quot;
+
+    dev = Device(device,user=user,password=passwd)
+    try:
+        dev.open(normalize=True)
+    except:
+        return &quot;connection failed&quot;
+
+    srcRoute = RouteTable(dev).get(form.srcIP, best=True)
+    dstRoute = RouteTable(dev).get(form.dstIP, best=True)
+    srcInt=srcRoute[0].via
+    dstInt=dstRoute[0].via
+
+    sz = IntZoneTable(dev).get(srcInt)
+    dz = IntZoneTable(dev).get(dstInt)
+    srcZone = sz[0].zone
+    dstZone = dz[0].zone
+
+    policy = policyTable(dev).get(from_zone=srcZone, to_zone=dstZone, source_ip=form.srcIP, destination_ip=form.dstIP, source_port='1', destination_port=form.dstPort, protocol=form.proto )
+    dev.close()
+    details = {'srcZone': srcZone, 'dstZone': dstZone, 'srcIP': policy[0].src.items(), 'dstIP': policy[0].dst.items(), 'app': policy[0].app, 'action': policy[0].action}
+    return render.policy_report(details = details)
+</code></pre>
+
+<p>if <strong>name</strong> == &ldquo;<strong>main</strong>&ldquo;:
+    app.run()
+`</p>
+
+<h2 id="to-add">To add</h2>
+
+<p>I&rsquo;m sure with a little googling, I can get python to do an NSlookup, then users can input hostnames instead of IP addresses.</p>
+
 </div>
-<div class="pagination">
-  <a></a>
-  <span class="number">1 / 1</span>  
-  <a></a>
-</div>
+
+  <br/><br/>
+  <div class="pagination">
+    <a></a>
+    <a class="next" href="https://vicarofcrom.github.io/post/FuzzyLogic4/">FuzzyLogic4</a>
+  </div>
+
       </div>
     </section>
     <footer>

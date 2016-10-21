@@ -2,13 +2,12 @@
 <!DOCTYPE html>
 <html ⚡>
 <head>
-	<meta name="generator" content="Hugo 0.16" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
 
-  <title>VicarOfCrom&#39;s Blog</title>
-  <link rel="canonical" href="https://VicarOfCrom.github.io/">
+  <title>FuzzyLogic4</title>
+  <link rel="canonical" href="https://vicarofcrom.github.io/post/FuzzyLogic4/">
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,700" rel="stylesheet" type="text/css">
 
@@ -142,117 +141,92 @@
       <div class="container">
 
 <div class="blog">
-  <div class="blog__tabs">
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/JunosPolicyChecker/">       
-  <h3 class="blog__title">JunosPolicyChecker</h3>
-  <div class="blog__subtitle">Thu, Oct 20, 2016</div>
-  <div class="blog__subtitle">
+  <h1>FuzzyLogic4</h1>
+  <p>Thu, Oct 20, 2016</p>
+  <p>
     
       
-        Network Engineering Stuff
+        <a href="https://vicarofcrom.github.iocategories/data-correlation-project">Data Correlation Project</a>
       
     
-    
-      
-        #Juniper, python
-      
-    
-  </div>
-</a>
+            
+  </p>
+  
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/FuzzyLogic4/">       
-  <h3 class="blog__title">FuzzyLogic4</h3>
-  <div class="blog__subtitle">Thu, Oct 20, 2016</div>
-  <div class="blog__subtitle">
-    
-      
-        Data Correlation Project
-      
-    
-    
-  </div>
-</a>
+<h1 id="fuzzy-logic-with-engineering-applications-chapter-4">Fuzzy Logic with Engineering Applications, Chapter 4</h1>
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/FuzzyLogic3/">       
-  <h3 class="blog__title">FuzzyLogic3</h3>
-  <div class="blog__subtitle">Mon, Oct 10, 2016</div>
-  <div class="blog__subtitle">
-    
-      
-        Data Correlation Project
-      
-    
-    
-  </div>
-</a>
+<h2 id="summary">Summary</h2>
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/SensorCorrelationOverview/">       
-  <h3 class="blog__title">SensorCorrelationOverview</h3>
-  <div class="blog__subtitle">Fri, Oct 7, 2016</div>
-  <div class="blog__subtitle">
-    
-      
-        Data Correlation Project
-      
-    
-    
-  </div>
-</a>
+<ul>
+<li>Membership function
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/FuzzyLogicIntro/">       
-  <h3 class="blog__title">FuzzyLogicIntro</h3>
-  <div class="blog__subtitle">Thu, Oct 6, 2016</div>
-  <div class="blog__subtitle">
-    
-      
-        Article Notes
-      
-        Data Correlation Project
-      
-    
-    
-  </div>
-</a>
+<ul>
+<li>Core
+The region with complete membership \mu_A(x)=1</li>
+<li>Support
+The region with nonzero membership (so basically the entire membership?) \mu_A(x)&gt;0</li>
+<li>Boundaries
+More than zero less than one.  basically some degree of membership other than 1 0&lt;\mu_A(x)&lt;1</li>
+</ul></li>
+<li>Fuzzy Sets
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/sensor-fusion-sasiadek/">       
-  <h3 class="blog__title">sensor fusion sasiadek</h3>
-  <div class="blog__subtitle">Wed, Sep 28, 2016</div>
-  <div class="blog__subtitle">
-    
-      
-        Article Notes
-      
-        Data Correlation Project
-      
-    
-    
-  </div>
-</a>
+<ul>
+<li>Normal
+At least one member has a membership value of 1
 
-    
-      <a class="blog__tab" href="https://vicarofcrom.github.io/post/hugo-test/">       
-  <h3 class="blog__title">hugo test</h3>
-  <div class="blog__subtitle">Wed, Sep 28, 2016</div>
-  <div class="blog__subtitle">
-    
-    
-  </div>
-</a>
+<ul>
+<li>prototype
+In a normal set with exactly one element with a membership value of one, that element is called the prototype</li>
+</ul></li>
+<li>Convex
+    Goes up, then down once, no crazy zigzags.  Seems to be the sames thing as &ldquo;normal&rdquo;</li>
+<li>generalized membership function
+different from the more or less normal looking sloped forms.  Looks like a double parabola.<br />
+    * interval-valued membership function
+        A subset of generalized membership function.
+    * type 2 fuzzy set
+        If you allow the intervals to become fuzzy then the membership function is referred to as a type 2</li>
+</ul></li>
+<li>Fuzzification
+Making &ldquo;crisp&rdquo; data fuzzy. Most common method seems to be to pick your zero and unity values, and use linear interpolation.</li>
+<li>Defuzzification
+Putting back after you do stuff to it.  There are a bunch of methods for this
 
-    
-  </div>
+<ul>
+<li>Lambda Cut
+Precursor to all other defuzzification operations.  Take a fuzzy set and pick a lambda value from 0 to 1 representing grade of membership.  Any member that&rsquo;s higher passes, any lower don&rsquo;t. Do this a bunch of times at different values and you get an idea how the members are distributed.  Reminds me a lot of AtoD conversion.  You can do it for relations too.  I&rsquo;m going to pretend I understand that part.</li>
+<li>1. Max membership principle</li>
+<li>2. Centroid Method</li>
+<li>3. Weighted Average Method</li>
+<li>4. Mean Max Membership</li>
+<li>5. Center of sums</li>
+<li>6. Center of largest area</li>
+<li>7. First (or last) of Maxima</li>
+</ul></li>
+</ul>
+
+<h2 id="applicability">Applicability</h2>
+
+<p>Definitely going to be fuzzifying, may or may not be defuzzifying.  Will have to think about it.</p>
+
+<h2 id="further-research">Further Research</h2>
+
+<p>It&rsquo;s time to start looking at some real world examples of how others are implementing this stuff.  I especially want to see what they do with time stamped data streams, what&rsquo;s the best method to carry along some time information through the fuzzification process.</p>
+
+<p>From python below, c-means clustering seems like the go to method for multidimensional data.  Time to find where in the book c-means is covered and get after it.</p>
+
+<h3 id="python">Python</h3>
+
+<p>Installed scikit fuzzy into my python playground.  Ran some of the examples.  No surprise copy and pasting someone else code looks fine.  going through the <a href="http://pythonhosted.org/scikit-fuzzy/auto_examples/index.html">examples</a> line by line to get proficient with the toolkit.  The tipping example looks like the linear interpolation type of fuzzification that I&rsquo;ve been typically seeing.  The c-means example seems much more applicable to this purpose, but I need to read up on it more.</p>
+
 </div>
-<div class="pagination">
-  <a></a>
-  <span class="number">1 / 1</span>  
-  <a></a>
-</div>
+
+  <br/><br/>
+  <div class="pagination">
+    <a class="prev" href="https://vicarofcrom.github.io/post/JunosPolicyChecker/">JunosPolicyChecker</a>
+    <a class="next" href="https://vicarofcrom.github.io/post/FuzzyLogic3/">FuzzyLogic3</a>
+  </div>
+
       </div>
     </section>
     <footer>

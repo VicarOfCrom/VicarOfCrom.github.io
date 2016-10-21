@@ -7,8 +7,230 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2016 Copyright Text</copyright>
-    <lastBuildDate>Mon, 10 Oct 2016 12:45:12 -0700</lastBuildDate>
+    <lastBuildDate>Thu, 20 Oct 2016 09:52:36 -0700</lastBuildDate>
     <atom:link href="https://VicarOfCrom.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>JunosPolicyChecker</title>
+      <link>https://vicarofcrom.github.io/post/JunosPolicyChecker/</link>
+      <pubDate>Thu, 20 Oct 2016 09:52:36 -0700</pubDate>
+      
+      <guid>https://vicarofcrom.github.io/post/JunosPolicyChecker/</guid>
+      <description>
+
+&lt;h1 id=&#34;juniper-firewall-policy-checker&#34;&gt;Juniper Firewall Policy Checker&lt;/h1&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a little script I wrote using pythonEZ.  Give it tcp session details and it connects to the firewall and checks what rules are there for that session.  It authenticates with a username that has rights to only the queries it needs.  I wrapped it up in a web.py page and threw it up on an IIS server.  That way I can use windows domain security on the front end easily.  I&amp;rsquo;ll throw the code up here for now, and I&amp;rsquo;ll try and write up details for how I did everything else if I can remember.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-code&#34;&gt;The code&lt;/h2&gt;
+
+&lt;h3 id=&#34;policy-checker-py&#34;&gt;policy_checker.py&lt;/h3&gt;
+
+&lt;p&gt;`# -&lt;em&gt;- coding: utf-8 -&lt;/em&gt;-
+&amp;ldquo;&amp;rdquo;&amp;rdquo;
+Created on Mon Feb 22 15:58:01 2016&lt;/p&gt;
+
+&lt;p&gt;@author: VicarOfCrom
+&amp;ldquo;&amp;rdquo;&amp;rdquo;&lt;/p&gt;
+
+&lt;h1 id=&#34;import-stuff&#34;&gt;import stuff&lt;/h1&gt;
+
+&lt;p&gt;#import sys
+#from pprint import pprint as pp
+from jnpr.junos import Device
+#from getpass import getpass
+from jnpr.junos.op.routes import RouteTable
+from myTables.op.zone import ZoneIntTable
+from myTables.op.policy import policyTable&lt;/p&gt;
+
+&lt;h1 id=&#34;change-username-after-testing-is-completed&#34;&gt;change username after testing is completed&lt;/h1&gt;
+
+&lt;p&gt;device=&amp;ldquo;192.168.176.1&amp;rdquo;
+user=&amp;ldquo;lentzj&amp;rdquo;
+#print &amp;ldquo;\n Please provide password for user &amp;lsquo;&amp;rdquo; + user + &amp;ldquo;&amp;lsquo;on device &amp;lsquo;&amp;rdquo; + device +&amp;ldquo;&amp;rsquo;.&amp;rdquo;
+#passwd = getpass()
+passwd =&amp;ldquo;S3pulTur@&amp;rdquo;
+srcIP = &amp;ldquo;192.168.152.34&amp;rdquo;
+dstIP = &amp;ldquo;192.168.152.2&amp;rdquo;
+proto = &amp;ldquo;tcp&amp;rdquo;
+dstPort = &amp;ldquo;1433&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;dev = Device(device,user=user,password=passwd)
+try:
+    dev.open(normalize=True)
+    print &amp;ldquo;connected to &amp;rdquo; + device + &amp;ldquo; as dev&amp;rdquo;
+except:
+    print &amp;ldquo;connection failed.&amp;rdquo;
+    print&amp;rdquo;\n** Type exit() to quit **&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;srcRoute = RouteTable(dev).get(srcIP, best=True)
+dstRoute = RouteTable(dev).get(dstIP, best=True)
+srcInt=srcRoute[0].via
+dstInt=dstRoute[0].via
+#pp(srcInt)
+#pp(dstInt)&lt;/p&gt;
+
+&lt;p&gt;zones = ZoneIntTable(dev).get()
+for zone in zones.items():
+    for interfaces in zone[1]:
+        if interfaces[1] != None:
+            if srcInt in interfaces[1]:
+                srcZone = zone[0]
+            if dstInt in interfaces[1]:
+                dstZone = zone[0]
+#print srcZone
+#print dstZone&lt;/p&gt;
+
+&lt;p&gt;policy = policyTable(dev).get(from_zone=srcZone, to_zone=dstZone, source_ip=srcIP, destination_ip=dstIP, source_port=&amp;lsquo;1&amp;rsquo;, destination_port=dstPort, protocol=proto )
+#pp(policy.items())&lt;/p&gt;
+
+&lt;p&gt;print(&amp;lsquo;session is &amp;rsquo; + policy[0].action + &amp;lsquo;ed&amp;rsquo;)&lt;/p&gt;
+
+&lt;p&gt;print(&amp;lsquo;POLICY DETAILS:&amp;lsquo;)
+print&amp;rsquo;Source Zone: &amp;lsquo;, srcZone,&amp;rsquo;   Destination Zone: &amp;lsquo;, dstZone
+print&amp;rsquo;Source: &amp;lsquo;, policy[0].src.items()
+print&amp;rsquo;Destination: &amp;lsquo;, policy[0].dst.items()
+print&amp;rsquo;Application: &amp;lsquo;, policy[0].app
+print&amp;rsquo;Action:&amp;lsquo;, policy[0].action&lt;/p&gt;
+
+&lt;p&gt;dev.close()`&lt;/p&gt;
+
+&lt;h3 id=&#34;app-py&#34;&gt;app.py&lt;/h3&gt;
+
+&lt;p&gt;`import web
+from jnpr.junos import Device
+from jnpr.junos.op.routes import RouteTable
+from myTables.op.policy import policyTable
+from myTables.op.intZone import IntZoneTable&lt;/p&gt;
+
+&lt;p&gt;urls = (
+    &amp;lsquo;/app.py.*&amp;lsquo;, &amp;lsquo;Index&amp;rsquo;,
+    &amp;lsquo;/policy_checker&amp;rsquo;, &amp;lsquo;Index&amp;rsquo;
+)&lt;/p&gt;
+
+&lt;p&gt;app = web.application(urls, globals())&lt;/p&gt;
+
+&lt;p&gt;render = web.template.render(&amp;lsquo;templates/&amp;rsquo;, base=&amp;ldquo;layout&amp;rdquo;)&lt;/p&gt;
+
+&lt;p&gt;class Index(object):
+    def GET(self):
+        return render.policy_checker()&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def POST(self):
+    form = web.input(srcIP=&amp;quot;SourceIP&amp;quot;, dstIP=&amp;quot;DestinationIP&amp;quot;, proto=&amp;quot;Protocol&amp;quot;, dstPort=&amp;quot;DstPort&amp;quot;)
+    device=&amp;quot;192.168.176.1&amp;quot;
+    user=&amp;quot;tesco.vee&amp;quot;
+    passwd =&amp;quot;Q-&amp;amp;0MU+aDh,IXhZG$rG&amp;quot;
+
+    dev = Device(device,user=user,password=passwd)
+    try:
+        dev.open(normalize=True)
+    except:
+        return &amp;quot;connection failed&amp;quot;
+
+    srcRoute = RouteTable(dev).get(form.srcIP, best=True)
+    dstRoute = RouteTable(dev).get(form.dstIP, best=True)
+    srcInt=srcRoute[0].via
+    dstInt=dstRoute[0].via
+
+    sz = IntZoneTable(dev).get(srcInt)
+    dz = IntZoneTable(dev).get(dstInt)
+    srcZone = sz[0].zone
+    dstZone = dz[0].zone
+
+    policy = policyTable(dev).get(from_zone=srcZone, to_zone=dstZone, source_ip=form.srcIP, destination_ip=form.dstIP, source_port=&#39;1&#39;, destination_port=form.dstPort, protocol=form.proto )
+    dev.close()
+    details = {&#39;srcZone&#39;: srcZone, &#39;dstZone&#39;: dstZone, &#39;srcIP&#39;: policy[0].src.items(), &#39;dstIP&#39;: policy[0].dst.items(), &#39;app&#39;: policy[0].app, &#39;action&#39;: policy[0].action}
+    return render.policy_report(details = details)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;if &lt;strong&gt;name&lt;/strong&gt; == &amp;ldquo;&lt;strong&gt;main&lt;/strong&gt;&amp;ldquo;:
+    app.run()
+`&lt;/p&gt;
+
+&lt;h2 id=&#34;to-add&#34;&gt;To add&lt;/h2&gt;
+
+&lt;p&gt;I&amp;rsquo;m sure with a little googling, I can get python to do an NSlookup, then users can input hostnames instead of IP addresses.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>FuzzyLogic4</title>
+      <link>https://vicarofcrom.github.io/post/FuzzyLogic4/</link>
+      <pubDate>Thu, 20 Oct 2016 09:50:00 -0700</pubDate>
+      
+      <guid>https://vicarofcrom.github.io/post/FuzzyLogic4/</guid>
+      <description>
+
+&lt;h1 id=&#34;fuzzy-logic-with-engineering-applications-chapter-4&#34;&gt;Fuzzy Logic with Engineering Applications, Chapter 4&lt;/h1&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Membership function
+
+&lt;ul&gt;
+&lt;li&gt;Core
+The region with complete membership \mu_A(x)=1&lt;/li&gt;
+&lt;li&gt;Support
+The region with nonzero membership (so basically the entire membership?) \mu_A(x)&amp;gt;0&lt;/li&gt;
+&lt;li&gt;Boundaries
+More than zero less than one.  basically some degree of membership other than 1 0&amp;lt;\mu_A(x)&amp;lt;1&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Fuzzy Sets
+
+&lt;ul&gt;
+&lt;li&gt;Normal
+At least one member has a membership value of 1
+
+&lt;ul&gt;
+&lt;li&gt;prototype
+In a normal set with exactly one element with a membership value of one, that element is called the prototype&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Convex
+    Goes up, then down once, no crazy zigzags.  Seems to be the sames thing as &amp;ldquo;normal&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;generalized membership function
+different from the more or less normal looking sloped forms.  Looks like a double parabola.&lt;br /&gt;
+    * interval-valued membership function
+        A subset of generalized membership function.
+    * type 2 fuzzy set
+        If you allow the intervals to become fuzzy then the membership function is referred to as a type 2&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Fuzzification
+Making &amp;ldquo;crisp&amp;rdquo; data fuzzy. Most common method seems to be to pick your zero and unity values, and use linear interpolation.&lt;/li&gt;
+&lt;li&gt;Defuzzification
+Putting back after you do stuff to it.  There are a bunch of methods for this
+
+&lt;ul&gt;
+&lt;li&gt;Lambda Cut
+Precursor to all other defuzzification operations.  Take a fuzzy set and pick a lambda value from 0 to 1 representing grade of membership.  Any member that&amp;rsquo;s higher passes, any lower don&amp;rsquo;t. Do this a bunch of times at different values and you get an idea how the members are distributed.  Reminds me a lot of AtoD conversion.  You can do it for relations too.  I&amp;rsquo;m going to pretend I understand that part.&lt;/li&gt;
+&lt;li&gt;1. Max membership principle&lt;/li&gt;
+&lt;li&gt;2. Centroid Method&lt;/li&gt;
+&lt;li&gt;3. Weighted Average Method&lt;/li&gt;
+&lt;li&gt;4. Mean Max Membership&lt;/li&gt;
+&lt;li&gt;5. Center of sums&lt;/li&gt;
+&lt;li&gt;6. Center of largest area&lt;/li&gt;
+&lt;li&gt;7. First (or last) of Maxima&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;applicability&#34;&gt;Applicability&lt;/h2&gt;
+
+&lt;p&gt;Definitely going to be fuzzifying, may or may not be defuzzifying.  Will have to think about it.&lt;/p&gt;
+
+&lt;h2 id=&#34;further-research&#34;&gt;Further Research&lt;/h2&gt;
+
+&lt;p&gt;It&amp;rsquo;s time to start looking at some real world examples of how others are implementing this stuff.  I especially want to see what they do with time stamped data streams, what&amp;rsquo;s the best method to carry along some time information through the fuzzification process.&lt;/p&gt;
+
+&lt;p&gt;From python below, c-means clustering seems like the go to method for multidimensional data.  Time to find where in the book c-means is covered and get after it.&lt;/p&gt;
+
+&lt;h3 id=&#34;python&#34;&gt;Python&lt;/h3&gt;
+
+&lt;p&gt;Installed scikit fuzzy into my python playground.  Ran some of the examples.  No surprise copy and pasting someone else code looks fine.  going through the &lt;a href=&#34;http://pythonhosted.org/scikit-fuzzy/auto_examples/index.html&#34;&gt;examples&lt;/a&gt; line by line to get proficient with the toolkit.  The tipping example looks like the linear interpolation type of fuzzification that I&amp;rsquo;ve been typically seeing.  The c-means example seems much more applicable to this purpose, but I need to read up on it more.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>FuzzyLogic3</title>
@@ -68,15 +290,15 @@
 
 &lt;h2 id=&#34;further-research&#34;&gt;Further Research&lt;/h2&gt;
 
-&lt;h3 id=&#34;videos&#34;&gt;videos&lt;/h3&gt;
+&lt;h3 id=&#34;videos&#34;&gt;Videos&lt;/h3&gt;
 
 &lt;p&gt;Everything on youtube is basically introductions to the concept, without many applications.  This book continues to be pretty much the best resource I think I&amp;rsquo;m going to find for a while as far as applied fuzzy logic.&lt;/p&gt;
 
-&lt;h3 id=&#34;python&#34;&gt;python&lt;/h3&gt;
+&lt;h3 id=&#34;python&#34;&gt;Python&lt;/h3&gt;
 
-&lt;p&gt;I found a fuzzy logic toolkity for python.  Since morse uses python already, I&amp;rsquo;m going to start playing with creating fuzzy sets in python and running relationships on them, in the future hope of porting simulated robot sensor data directly from morse into the fuzzy logic toolkit, and then into dialectica.  &lt;a href=&#34;https://pypi.python.org/pypi/scikit-fuzzy&#34;&gt;python fuzzy logic toolkit&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I found a fuzzy logic toolkit for python.  Since morse uses python already, I&amp;rsquo;m going to start playing with creating fuzzy sets in python and running relationships on them, in the future hope of porting simulated robot sensor data directly from morse into the fuzzy logic toolkit, and then into dialectica.  &lt;a href=&#34;https://pypi.python.org/pypi/scikit-fuzzy&#34;&gt;python fuzzy logic toolkit&lt;/a&gt; Will probably use jupyter as a playground and just upload sites directly from there or something.&lt;/p&gt;
 
-&lt;h3 id=&#34;cognition&#34;&gt;cognition&lt;/h3&gt;
+&lt;h3 id=&#34;cognition&#34;&gt;Cognition&lt;/h3&gt;
 
 &lt;p&gt;All this fuzzy stuff has really interesting implications when applied to the dialectica framework.  Particularly when calculating nodal relationships.  It should be possible to increment/decremement a nodes fuzzy membership in a group as users navigate the tree structure.  The more browsed trees would get a higher membership probability and less browsed would be gradually decremented and deleted.  This gives the algorithm a robustness for dealing with bad tags as well.  This proposed implementation would be roughly analogous to congnitive theory.  The more you access learned skills in the same way the easier it becomes&amp;hellip; building up those metaphorical ruts in the road.&lt;/p&gt;
 </description>
