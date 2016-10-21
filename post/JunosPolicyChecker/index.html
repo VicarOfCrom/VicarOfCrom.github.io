@@ -167,56 +167,55 @@
 
 <h3 id="app-py">app.py</h3>
 
-<p>`import web
+<pre><code>import web
 from jnpr.junos import Device
 from jnpr.junos.op.routes import RouteTable
 from myTables.op.policy import policyTable
-from myTables.op.intZone import IntZoneTable</p>
+from myTables.op.intZone import IntZoneTable
 
-<p>urls = (
-    &lsquo;/app.py.*&lsquo;, &lsquo;Index&rsquo;,
-    &lsquo;/policy_checker&rsquo;, &lsquo;Index&rsquo;
-)</p>
+urls = (
+    '/app\.py.*', 'Index',
+    '/policy_checker', 'Index'
+)
 
-<p>app = web.application(urls, globals())</p>
+app = web.application(urls, globals())
 
-<p>render = web.template.render(&lsquo;templates/&rsquo;, base=&ldquo;layout&rdquo;)</p>
+render = web.template.render('templates/', base=&quot;layout&quot;)
 
-<p>class Index(object):
+class Index(object):
     def GET(self):
-        return render.policy_checker()</p>
-
-<pre><code>def POST(self):
-    form = web.input(srcIP=&quot;SourceIP&quot;, dstIP=&quot;DestinationIP&quot;, proto=&quot;Protocol&quot;, dstPort=&quot;DstPort&quot;)
-    device=&quot;192.168.176.1&quot;
-    user=&quot;tesco.vee&quot;
-    passwd =&quot;Q-&amp;0MU+aDh,IXhZG$rG&quot;
-
-    dev = Device(device,user=user,password=passwd)
-    try:
-        dev.open(normalize=True)
-    except:
-        return &quot;connection failed&quot;
-
-    srcRoute = RouteTable(dev).get(form.srcIP, best=True)
-    dstRoute = RouteTable(dev).get(form.dstIP, best=True)
-    srcInt=srcRoute[0].via
-    dstInt=dstRoute[0].via
-
-    sz = IntZoneTable(dev).get(srcInt)
-    dz = IntZoneTable(dev).get(dstInt)
-    srcZone = sz[0].zone
-    dstZone = dz[0].zone
-
-    policy = policyTable(dev).get(from_zone=srcZone, to_zone=dstZone, source_ip=form.srcIP, destination_ip=form.dstIP, source_port='1', destination_port=form.dstPort, protocol=form.proto )
-    dev.close()
-    details = {'srcZone': srcZone, 'dstZone': dstZone, 'srcIP': policy[0].src.items(), 'dstIP': policy[0].dst.items(), 'app': policy[0].app, 'action': policy[0].action}
-    return render.policy_report(details = details)
-</code></pre>
-
-<p>if <strong>name</strong> == &ldquo;<strong>main</strong>&ldquo;:
+        return render.policy_checker()
+        
+    def POST(self):
+        form = web.input(srcIP=&quot;SourceIP&quot;, dstIP=&quot;DestinationIP&quot;, proto=&quot;Protocol&quot;, dstPort=&quot;DstPort&quot;)
+        device=&quot;192.168.176.1&quot;
+        user=&quot;XXXX&quot;
+        passwd =&quot;XXXX&quot;
+        
+        dev = Device(device,user=user,password=passwd)
+        try:
+            dev.open(normalize=True)
+        except:
+            return &quot;connection failed&quot;
+        
+        srcRoute = RouteTable(dev).get(form.srcIP, best=True)
+        dstRoute = RouteTable(dev).get(form.dstIP, best=True)
+        srcInt=srcRoute[0].via
+        dstInt=dstRoute[0].via
+        
+        sz = IntZoneTable(dev).get(srcInt)
+        dz = IntZoneTable(dev).get(dstInt)
+        srcZone = sz[0].zone
+        dstZone = dz[0].zone
+        
+        policy = policyTable(dev).get(from_zone=srcZone, to_zone=dstZone, source_ip=form.srcIP, destination_ip=form.dstIP, source_port='1', destination_port=form.dstPort, protocol=form.proto )
+        dev.close()
+        details = {'srcZone': srcZone, 'dstZone': dstZone, 'srcIP': policy[0].src.items(), 'dstIP': policy[0].dst.items(), 'app': policy[0].app, 'action': policy[0].action}
+        return render.policy_report(details = details)
+        
+if __name__ == &quot;__main__&quot;:
     app.run()
-`</p>
+</code></pre>
 
 <h2 id="to-add">To add</h2>
 

@@ -28,56 +28,55 @@
 
 &lt;h3 id=&#34;app-py&#34;&gt;app.py&lt;/h3&gt;
 
-&lt;p&gt;`import web
+&lt;pre&gt;&lt;code&gt;import web
 from jnpr.junos import Device
 from jnpr.junos.op.routes import RouteTable
 from myTables.op.policy import policyTable
-from myTables.op.intZone import IntZoneTable&lt;/p&gt;
+from myTables.op.intZone import IntZoneTable
 
-&lt;p&gt;urls = (
-    &amp;lsquo;/app.py.*&amp;lsquo;, &amp;lsquo;Index&amp;rsquo;,
-    &amp;lsquo;/policy_checker&amp;rsquo;, &amp;lsquo;Index&amp;rsquo;
-)&lt;/p&gt;
+urls = (
+    &#39;/app\.py.*&#39;, &#39;Index&#39;,
+    &#39;/policy_checker&#39;, &#39;Index&#39;
+)
 
-&lt;p&gt;app = web.application(urls, globals())&lt;/p&gt;
+app = web.application(urls, globals())
 
-&lt;p&gt;render = web.template.render(&amp;lsquo;templates/&amp;rsquo;, base=&amp;ldquo;layout&amp;rdquo;)&lt;/p&gt;
+render = web.template.render(&#39;templates/&#39;, base=&amp;quot;layout&amp;quot;)
 
-&lt;p&gt;class Index(object):
+class Index(object):
     def GET(self):
-        return render.policy_checker()&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;def POST(self):
-    form = web.input(srcIP=&amp;quot;SourceIP&amp;quot;, dstIP=&amp;quot;DestinationIP&amp;quot;, proto=&amp;quot;Protocol&amp;quot;, dstPort=&amp;quot;DstPort&amp;quot;)
-    device=&amp;quot;192.168.176.1&amp;quot;
-    user=&amp;quot;tesco.vee&amp;quot;
-    passwd =&amp;quot;Q-&amp;amp;0MU+aDh,IXhZG$rG&amp;quot;
-
-    dev = Device(device,user=user,password=passwd)
-    try:
-        dev.open(normalize=True)
-    except:
-        return &amp;quot;connection failed&amp;quot;
-
-    srcRoute = RouteTable(dev).get(form.srcIP, best=True)
-    dstRoute = RouteTable(dev).get(form.dstIP, best=True)
-    srcInt=srcRoute[0].via
-    dstInt=dstRoute[0].via
-
-    sz = IntZoneTable(dev).get(srcInt)
-    dz = IntZoneTable(dev).get(dstInt)
-    srcZone = sz[0].zone
-    dstZone = dz[0].zone
-
-    policy = policyTable(dev).get(from_zone=srcZone, to_zone=dstZone, source_ip=form.srcIP, destination_ip=form.dstIP, source_port=&#39;1&#39;, destination_port=form.dstPort, protocol=form.proto )
-    dev.close()
-    details = {&#39;srcZone&#39;: srcZone, &#39;dstZone&#39;: dstZone, &#39;srcIP&#39;: policy[0].src.items(), &#39;dstIP&#39;: policy[0].dst.items(), &#39;app&#39;: policy[0].app, &#39;action&#39;: policy[0].action}
-    return render.policy_report(details = details)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;if &lt;strong&gt;name&lt;/strong&gt; == &amp;ldquo;&lt;strong&gt;main&lt;/strong&gt;&amp;ldquo;:
+        return render.policy_checker()
+        
+    def POST(self):
+        form = web.input(srcIP=&amp;quot;SourceIP&amp;quot;, dstIP=&amp;quot;DestinationIP&amp;quot;, proto=&amp;quot;Protocol&amp;quot;, dstPort=&amp;quot;DstPort&amp;quot;)
+        device=&amp;quot;192.168.176.1&amp;quot;
+        user=&amp;quot;XXXX&amp;quot;
+        passwd =&amp;quot;XXXX&amp;quot;
+        
+        dev = Device(device,user=user,password=passwd)
+        try:
+            dev.open(normalize=True)
+        except:
+            return &amp;quot;connection failed&amp;quot;
+        
+        srcRoute = RouteTable(dev).get(form.srcIP, best=True)
+        dstRoute = RouteTable(dev).get(form.dstIP, best=True)
+        srcInt=srcRoute[0].via
+        dstInt=dstRoute[0].via
+        
+        sz = IntZoneTable(dev).get(srcInt)
+        dz = IntZoneTable(dev).get(dstInt)
+        srcZone = sz[0].zone
+        dstZone = dz[0].zone
+        
+        policy = policyTable(dev).get(from_zone=srcZone, to_zone=dstZone, source_ip=form.srcIP, destination_ip=form.dstIP, source_port=&#39;1&#39;, destination_port=form.dstPort, protocol=form.proto )
+        dev.close()
+        details = {&#39;srcZone&#39;: srcZone, &#39;dstZone&#39;: dstZone, &#39;srcIP&#39;: policy[0].src.items(), &#39;dstIP&#39;: policy[0].dst.items(), &#39;app&#39;: policy[0].app, &#39;action&#39;: policy[0].action}
+        return render.policy_report(details = details)
+        
+if __name__ == &amp;quot;__main__&amp;quot;:
     app.run()
-`&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;to-add&#34;&gt;To add&lt;/h2&gt;
 
