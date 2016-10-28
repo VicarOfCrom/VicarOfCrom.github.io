@@ -6,9 +6,85 @@
     <description>Recent content in Posts on VicarOfCrom&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>© 2016 Copyright Text</copyright>
-    <lastBuildDate>Thu, 20 Oct 2016 09:52:36 -0700</lastBuildDate>
+    <lastBuildDate>Fri, 28 Oct 2016 13:55:20 -0700</lastBuildDate>
     <atom:link href="https://VicarOfCrom.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>FuzzyLogic5</title>
+      <link>https://vicarofcrom.github.io/post/FuzzyLogic5/</link>
+      <pubDate>Fri, 28 Oct 2016 13:55:20 -0700</pubDate>
+      
+      <guid>https://vicarofcrom.github.io/post/FuzzyLogic5/</guid>
+      <description>
+
+&lt;h1 id=&#34;fuzzy-logic-with-engineering-applications-chapter-5&#34;&gt;Fuzzy Logic with Engineering Applications, Chapter 5&lt;/h1&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Classical Logic: included as reference point for fuzzy logic operations
+
+&lt;ul&gt;
+&lt;li&gt;Connectives
+
+&lt;ul&gt;
+&lt;li&gt;disjunction
+We should call &amp;ldquo;Or&amp;rdquo; gates dis-junctions&lt;/li&gt;
+&lt;li&gt;conjunction
+And Gates should be con-junctions&lt;/li&gt;
+&lt;li&gt;negation&lt;/li&gt;
+&lt;li&gt;implication&lt;/li&gt;
+&lt;li&gt;equivalence&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Tautologies&lt;/li&gt;
+&lt;li&gt;Contradictions
+&amp;ldquo;Compound propositions that are always false, regardless of the truth value of the individual simple propositions constituting the compound proposition&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Equivalence&lt;/li&gt;
+&lt;li&gt;XOR, NOR&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Fuzzy Logic
+    Standard Fuzzy operations don&amp;rsquo;t follow excluded middle axioms
+
+&lt;ul&gt;
+&lt;li&gt;Operations
+
+&lt;ul&gt;
+&lt;li&gt;Negation&lt;/li&gt;
+&lt;li&gt;Disjunction&lt;/li&gt;
+&lt;li&gt;Conjunction&lt;/li&gt;
+&lt;li&gt;Implication&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Approximate Reasoning
+
+&lt;ul&gt;
+&lt;li&gt;Sweet Quote: &amp;ldquo;The ultimate goal of fuzzy logic is to form the theoretical foundation for reasoning about imprecise propositions&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Fuzzy Systems
+
+&lt;ul&gt;
+&lt;li&gt;Natural Language&lt;/li&gt;
+&lt;li&gt;Linguistic Hedges&lt;/li&gt;
+&lt;li&gt;Combining multiple fuzzy rules together&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Graphical Techniques of Inference&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;applicability&#34;&gt;Applicability&lt;/h2&gt;
+
+&lt;p&gt;Continuous data streams from sensors are going to be rewritten with fuzzy membership functions.  Once membership is defined, these operations are going to be instrumental in categorizing, sorting and analyzing the discretized data.  Because I have so little experience with fuzzy algorithms, I think I&amp;rsquo;m going to attempt to write out my functions either by hand or by computer first using traditional binary logic, then attempt to find a correlating fuzzy function for each step and rewrite.&lt;/p&gt;
+
+&lt;h2 id=&#34;further-research&#34;&gt;Further Research&lt;/h2&gt;
+
+&lt;p&gt;Need to get better at math and markdown notation in Hugo Markdown&lt;/p&gt;
+
+&lt;p&gt;This is getting close to covering everything I need for the sensor correlation project at least as an overview.  It&amp;rsquo;s time to start working on some details.  I think later chapters in the book will make a good reference for specific issues, but may be outside my current capability and may not be necessary for what I&amp;rsquo;m trying to do with this project.&lt;/p&gt;
+
+&lt;h3 id=&#34;python&#34;&gt;Python&lt;/h3&gt;
+
+&lt;p&gt;No time this week.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>JunosPolicyChecker</title>
@@ -33,6 +109,7 @@ from jnpr.junos import Device
 from jnpr.junos.op.routes import RouteTable
 from myTables.op.policy import policyTable
 from myTables.op.intZone import IntZoneTable
+import socket
 
 urls = (
     &#39;/app\.py.*&#39;, &#39;Index&#39;,
@@ -48,10 +125,28 @@ class Index(object):
         return render.policy_checker()
         
     def POST(self):
-        form = web.input(srcIP=&amp;quot;SourceIP&amp;quot;, dstIP=&amp;quot;DestinationIP&amp;quot;, proto=&amp;quot;Protocol&amp;quot;, dstPort=&amp;quot;DstPort&amp;quot;)
+        query = web.input(src=&amp;quot;Source&amp;quot;, dst=&amp;quot;Destination&amp;quot;, proto=&amp;quot;Protocol&amp;quot;, dstPort=&amp;quot;DstPort&amp;quot;)
         device=&amp;quot;192.168.176.1&amp;quot;
         user=&amp;quot;XXXX&amp;quot;
         passwd =&amp;quot;XXXX&amp;quot;
+        
+        # Test for hostname or IP and resolve if necessary
+        try:
+            socket.gethostbyname(query.src)
+        except:
+            return &amp;quot;resolve failed&amp;quot;
+        if socket.gethostbyname(query.src) == query.src:
+            # It&#39;s an IP
+            srcIP = query.src
+        else:
+            # It&#39;s a host name
+            srcIP = socket.gethostbyname(query.src)
+        if socket.gethostbyname(query.dst) == query.dst:
+            # It&#39;s an IP
+            dstIP = query.dst
+        else:
+            # It&#39;s a host name
+            dstIP = socket.gethostbyname(query.dst)
         
         dev = Device(device,user=user,password=passwd)
         try:
@@ -59,8 +154,8 @@ class Index(object):
         except:
             return &amp;quot;connection failed&amp;quot;
         
-        srcRoute = RouteTable(dev).get(form.srcIP, best=True)
-        dstRoute = RouteTable(dev).get(form.dstIP, best=True)
+        srcRoute = RouteTable(dev).get(srcIP, best=True)
+        dstRoute = RouteTable(dev).get(dstIP, best=True)
         srcInt=srcRoute[0].via
         dstInt=dstRoute[0].via
         
@@ -69,18 +164,52 @@ class Index(object):
         srcZone = sz[0].zone
         dstZone = dz[0].zone
         
-        policy = policyTable(dev).get(from_zone=srcZone, to_zone=dstZone, source_ip=form.srcIP, destination_ip=form.dstIP, source_port=&#39;1&#39;, destination_port=form.dstPort, protocol=form.proto )
+        policy = policyTable(dev).get(from_zone=srcZone, to_zone=dstZone, source_ip=srcIP, destination_ip=dstIP, source_port=&#39;1&#39;, destination_port=query.dstPort, protocol=query.proto )
         dev.close()
         details = {&#39;srcZone&#39;: srcZone, &#39;dstZone&#39;: dstZone, &#39;srcIP&#39;: policy[0].src.items(), &#39;dstIP&#39;: policy[0].dst.items(), &#39;app&#39;: policy[0].app, &#39;action&#39;: policy[0].action}
         return render.policy_report(details = details)
         
 if __name__ == &amp;quot;__main__&amp;quot;:
     app.run()
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;policy-checker-html&#34;&gt;policy_checker.html&lt;/h3&gt;
+
+&lt;p&gt;html page with form to get user information and pass to python script&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;h1&amp;gt;Policy Checker (Beta)&amp;lt;/h1&amp;gt;
+&amp;lt;h2&amp;gt;Enter session information&amp;lt;/h2&amp;gt;
+
+&amp;lt;form name=&amp;quot;query&amp;quot;
+    action=&amp;quot;/policy_checker&amp;quot; method=&amp;quot;POST&amp;quot;&amp;gt;
+    Protocol: &amp;lt;select name=&amp;quot;proto&amp;quot;&amp;gt;
+    &amp;lt;option value=&amp;quot;tcp&amp;quot;&amp;gt;TCP&amp;lt;/option&amp;gt;
+    &amp;lt;option value=&amp;quot;udp&amp;quot;&amp;gt;UDP&amp;lt;/option&amp;gt;
+    &amp;lt;option value=&amp;quot;icmp&amp;quot;&amp;gt;ICMP&amp;lt;/option&amp;gt;
+    &amp;lt;/select&amp;gt;
+    &amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;
+    Source: &amp;lt;input type=&amp;quot;text&amp;quot; name=&amp;quot;src&amp;quot;&amp;gt;
+    IP address or Hostname
+    &amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;
+    Destination: &amp;lt;input type=&amp;quot;text&amp;quot; name=&amp;quot;dst&amp;quot;&amp;gt;
+    IP address or Hostname
+    &amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;
+    Destination Port: &amp;lt;input type=&amp;quot;text&amp;quot; name=&amp;quot;dstPort&amp;quot;&amp;gt;
+    Input &amp;quot;1&amp;quot; for ICMP
+    &amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;
+    &amp;lt;input type=&amp;quot;submit&amp;quot;&amp;gt;
+&amp;lt;/form&amp;gt;
+&amp;lt;p&amp;gt;
+TCP/UDP port number information can be found at the &amp;lt;a href=&amp;quot;http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml&amp;quot; target=&amp;quot;_blank&amp;quot;&amp;gt;Service Name and Transport Protocol Port Number Registry&amp;lt;/a&amp;gt; here.
+&amp;lt;/p&amp;gt;
+
+Report errors/suggestions to Vicar Of Crom
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;to-add&#34;&gt;To add&lt;/h2&gt;
 
-&lt;p&gt;I&amp;rsquo;m sure with a little googling, I can get python to do an NSlookup, then users can input hostnames instead of IP addresses.&lt;/p&gt;
+&lt;p&gt;Multiple firewall support&lt;/p&gt;
 </description>
     </item>
     
@@ -133,7 +262,7 @@ Putting back after you do stuff to it.  There are a bunch of methods for this
 
 &lt;ul&gt;
 &lt;li&gt;Lambda Cut
-Precursor to all other defuzzification operations.  Take a fuzzy set and pick a lambda value from 0 to 1 representing grade of membership.  Any member that&amp;rsquo;s higher passes, any lower don&amp;rsquo;t. Do this a bunch of times at different values and you get an idea how the members are distributed.  Reminds me a lot of AtoD conversion.  You can do it for relations too.  I&amp;rsquo;m going to pretend I understand that part.&lt;/li&gt;
+Precursor to all other defuzzification operations.  Take a fuzzy set and pick a lambda value from 0 to 1 representing grade of membership.  Any member that&amp;rsquo;s higher passes, any lower don&amp;rsquo;t. Do this a bunch of times at different values and you get an idea how the members are distributed.  Reminds me a lot of A to D conversion.  You can do it for relations too.  I&amp;rsquo;m going to pretend I understand that part.&lt;/li&gt;
 &lt;li&gt;1. Max membership principle&lt;/li&gt;
 &lt;li&gt;2. Centroid Method&lt;/li&gt;
 &lt;li&gt;3. Weighted Average Method&lt;/li&gt;

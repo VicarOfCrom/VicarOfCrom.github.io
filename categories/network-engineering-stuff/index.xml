@@ -6,7 +6,6 @@
     <description>Recent content in Network Engineering Stuff on VicarOfCrom&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>© 2016 Copyright Text</copyright>
     <lastBuildDate>Thu, 20 Oct 2016 09:52:36 -0700</lastBuildDate>
     <atom:link href="https://VicarOfCrom.github.io/categories/network-engineering-stuff/index.xml" rel="self" type="application/rss+xml" />
     
@@ -33,6 +32,7 @@ from jnpr.junos import Device
 from jnpr.junos.op.routes import RouteTable
 from myTables.op.policy import policyTable
 from myTables.op.intZone import IntZoneTable
+import socket
 
 urls = (
     &#39;/app\.py.*&#39;, &#39;Index&#39;,
@@ -48,10 +48,28 @@ class Index(object):
         return render.policy_checker()
         
     def POST(self):
-        form = web.input(srcIP=&amp;quot;SourceIP&amp;quot;, dstIP=&amp;quot;DestinationIP&amp;quot;, proto=&amp;quot;Protocol&amp;quot;, dstPort=&amp;quot;DstPort&amp;quot;)
+        query = web.input(src=&amp;quot;Source&amp;quot;, dst=&amp;quot;Destination&amp;quot;, proto=&amp;quot;Protocol&amp;quot;, dstPort=&amp;quot;DstPort&amp;quot;)
         device=&amp;quot;192.168.176.1&amp;quot;
         user=&amp;quot;XXXX&amp;quot;
         passwd =&amp;quot;XXXX&amp;quot;
+        
+        # Test for hostname or IP and resolve if necessary
+        try:
+            socket.gethostbyname(query.src)
+        except:
+            return &amp;quot;resolve failed&amp;quot;
+        if socket.gethostbyname(query.src) == query.src:
+            # It&#39;s an IP
+            srcIP = query.src
+        else:
+            # It&#39;s a host name
+            srcIP = socket.gethostbyname(query.src)
+        if socket.gethostbyname(query.dst) == query.dst:
+            # It&#39;s an IP
+            dstIP = query.dst
+        else:
+            # It&#39;s a host name
+            dstIP = socket.gethostbyname(query.dst)
         
         dev = Device(device,user=user,password=passwd)
         try:
@@ -59,8 +77,8 @@ class Index(object):
         except:
             return &amp;quot;connection failed&amp;quot;
         
-        srcRoute = RouteTable(dev).get(form.srcIP, best=True)
-        dstRoute = RouteTable(dev).get(form.dstIP, best=True)
+        srcRoute = RouteTable(dev).get(srcIP, best=True)
+        dstRoute = RouteTable(dev).get(dstIP, best=True)
         srcInt=srcRoute[0].via
         dstInt=dstRoute[0].via
         
@@ -69,18 +87,52 @@ class Index(object):
         srcZone = sz[0].zone
         dstZone = dz[0].zone
         
-        policy = policyTable(dev).get(from_zone=srcZone, to_zone=dstZone, source_ip=form.srcIP, destination_ip=form.dstIP, source_port=&#39;1&#39;, destination_port=form.dstPort, protocol=form.proto )
+        policy = policyTable(dev).get(from_zone=srcZone, to_zone=dstZone, source_ip=srcIP, destination_ip=dstIP, source_port=&#39;1&#39;, destination_port=query.dstPort, protocol=query.proto )
         dev.close()
         details = {&#39;srcZone&#39;: srcZone, &#39;dstZone&#39;: dstZone, &#39;srcIP&#39;: policy[0].src.items(), &#39;dstIP&#39;: policy[0].dst.items(), &#39;app&#39;: policy[0].app, &#39;action&#39;: policy[0].action}
         return render.policy_report(details = details)
         
 if __name__ == &amp;quot;__main__&amp;quot;:
     app.run()
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;policy-checker-html&#34;&gt;policy_checker.html&lt;/h3&gt;
+
+&lt;p&gt;html page with form to get user information and pass to python script&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;h1&amp;gt;Policy Checker (Beta)&amp;lt;/h1&amp;gt;
+&amp;lt;h2&amp;gt;Enter session information&amp;lt;/h2&amp;gt;
+
+&amp;lt;form name=&amp;quot;query&amp;quot;
+    action=&amp;quot;/policy_checker&amp;quot; method=&amp;quot;POST&amp;quot;&amp;gt;
+    Protocol: &amp;lt;select name=&amp;quot;proto&amp;quot;&amp;gt;
+    &amp;lt;option value=&amp;quot;tcp&amp;quot;&amp;gt;TCP&amp;lt;/option&amp;gt;
+    &amp;lt;option value=&amp;quot;udp&amp;quot;&amp;gt;UDP&amp;lt;/option&amp;gt;
+    &amp;lt;option value=&amp;quot;icmp&amp;quot;&amp;gt;ICMP&amp;lt;/option&amp;gt;
+    &amp;lt;/select&amp;gt;
+    &amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;
+    Source: &amp;lt;input type=&amp;quot;text&amp;quot; name=&amp;quot;src&amp;quot;&amp;gt;
+    IP address or Hostname
+    &amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;
+    Destination: &amp;lt;input type=&amp;quot;text&amp;quot; name=&amp;quot;dst&amp;quot;&amp;gt;
+    IP address or Hostname
+    &amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;
+    Destination Port: &amp;lt;input type=&amp;quot;text&amp;quot; name=&amp;quot;dstPort&amp;quot;&amp;gt;
+    Input &amp;quot;1&amp;quot; for ICMP
+    &amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;
+    &amp;lt;input type=&amp;quot;submit&amp;quot;&amp;gt;
+&amp;lt;/form&amp;gt;
+&amp;lt;p&amp;gt;
+TCP/UDP port number information can be found at the &amp;lt;a href=&amp;quot;http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml&amp;quot; target=&amp;quot;_blank&amp;quot;&amp;gt;Service Name and Transport Protocol Port Number Registry&amp;lt;/a&amp;gt; here.
+&amp;lt;/p&amp;gt;
+
+Report errors/suggestions to Vicar Of Crom
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;to-add&#34;&gt;To add&lt;/h2&gt;
 
-&lt;p&gt;I&amp;rsquo;m sure with a little googling, I can get python to do an NSlookup, then users can input hostnames instead of IP addresses.&lt;/p&gt;
+&lt;p&gt;Multiple firewall support&lt;/p&gt;
 </description>
     </item>
     

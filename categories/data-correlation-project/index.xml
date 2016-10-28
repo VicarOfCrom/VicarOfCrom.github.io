@@ -6,9 +6,85 @@
     <description>Recent content in Data Correlation Project on VicarOfCrom&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>© 2016 Copyright Text</copyright>
-    <lastBuildDate>Thu, 20 Oct 2016 09:50:00 -0700</lastBuildDate>
+    <lastBuildDate>Fri, 28 Oct 2016 13:55:20 -0700</lastBuildDate>
     <atom:link href="https://VicarOfCrom.github.io/categories/data-correlation-project/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>FuzzyLogic5</title>
+      <link>https://vicarofcrom.github.io/post/FuzzyLogic5/</link>
+      <pubDate>Fri, 28 Oct 2016 13:55:20 -0700</pubDate>
+      
+      <guid>https://vicarofcrom.github.io/post/FuzzyLogic5/</guid>
+      <description>
+
+&lt;h1 id=&#34;fuzzy-logic-with-engineering-applications-chapter-5&#34;&gt;Fuzzy Logic with Engineering Applications, Chapter 5&lt;/h1&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Classical Logic: included as reference point for fuzzy logic operations
+
+&lt;ul&gt;
+&lt;li&gt;Connectives
+
+&lt;ul&gt;
+&lt;li&gt;disjunction
+We should call &amp;ldquo;Or&amp;rdquo; gates dis-junctions&lt;/li&gt;
+&lt;li&gt;conjunction
+And Gates should be con-junctions&lt;/li&gt;
+&lt;li&gt;negation&lt;/li&gt;
+&lt;li&gt;implication&lt;/li&gt;
+&lt;li&gt;equivalence&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Tautologies&lt;/li&gt;
+&lt;li&gt;Contradictions
+&amp;ldquo;Compound propositions that are always false, regardless of the truth value of the individual simple propositions constituting the compound proposition&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Equivalence&lt;/li&gt;
+&lt;li&gt;XOR, NOR&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Fuzzy Logic
+    Standard Fuzzy operations don&amp;rsquo;t follow excluded middle axioms
+
+&lt;ul&gt;
+&lt;li&gt;Operations
+
+&lt;ul&gt;
+&lt;li&gt;Negation&lt;/li&gt;
+&lt;li&gt;Disjunction&lt;/li&gt;
+&lt;li&gt;Conjunction&lt;/li&gt;
+&lt;li&gt;Implication&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Approximate Reasoning
+
+&lt;ul&gt;
+&lt;li&gt;Sweet Quote: &amp;ldquo;The ultimate goal of fuzzy logic is to form the theoretical foundation for reasoning about imprecise propositions&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Fuzzy Systems
+
+&lt;ul&gt;
+&lt;li&gt;Natural Language&lt;/li&gt;
+&lt;li&gt;Linguistic Hedges&lt;/li&gt;
+&lt;li&gt;Combining multiple fuzzy rules together&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Graphical Techniques of Inference&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;applicability&#34;&gt;Applicability&lt;/h2&gt;
+
+&lt;p&gt;Continuous data streams from sensors are going to be rewritten with fuzzy membership functions.  Once membership is defined, these operations are going to be instrumental in categorizing, sorting and analyzing the discretized data.  Because I have so little experience with fuzzy algorithms, I think I&amp;rsquo;m going to attempt to write out my functions either by hand or by computer first using traditional binary logic, then attempt to find a correlating fuzzy function for each step and rewrite.&lt;/p&gt;
+
+&lt;h2 id=&#34;further-research&#34;&gt;Further Research&lt;/h2&gt;
+
+&lt;p&gt;Need to get better at math and markdown notation in Hugo Markdown&lt;/p&gt;
+
+&lt;p&gt;This is getting close to covering everything I need for the sensor correlation project at least as an overview.  It&amp;rsquo;s time to start working on some details.  I think later chapters in the book will make a good reference for specific issues, but may be outside my current capability and may not be necessary for what I&amp;rsquo;m trying to do with this project.&lt;/p&gt;
+
+&lt;h3 id=&#34;python&#34;&gt;Python&lt;/h3&gt;
+
+&lt;p&gt;No time this week.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>FuzzyLogic4</title>
@@ -59,7 +135,7 @@ Putting back after you do stuff to it.  There are a bunch of methods for this
 
 &lt;ul&gt;
 &lt;li&gt;Lambda Cut
-Precursor to all other defuzzification operations.  Take a fuzzy set and pick a lambda value from 0 to 1 representing grade of membership.  Any member that&amp;rsquo;s higher passes, any lower don&amp;rsquo;t. Do this a bunch of times at different values and you get an idea how the members are distributed.  Reminds me a lot of AtoD conversion.  You can do it for relations too.  I&amp;rsquo;m going to pretend I understand that part.&lt;/li&gt;
+Precursor to all other defuzzification operations.  Take a fuzzy set and pick a lambda value from 0 to 1 representing grade of membership.  Any member that&amp;rsquo;s higher passes, any lower don&amp;rsquo;t. Do this a bunch of times at different values and you get an idea how the members are distributed.  Reminds me a lot of A to D conversion.  You can do it for relations too.  I&amp;rsquo;m going to pretend I understand that part.&lt;/li&gt;
 &lt;li&gt;1. Max membership principle&lt;/li&gt;
 &lt;li&gt;2. Centroid Method&lt;/li&gt;
 &lt;li&gt;3. Weighted Average Method&lt;/li&gt;
